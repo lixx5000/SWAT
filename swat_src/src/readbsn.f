@@ -535,7 +535,7 @@
           if ((tlu(ii:ii).eq.','.and.tlu(ii-1:ii-1).ne.',').or.   
      &       (tlu(ii:ii).eq.' '.and.tlu(ii-1:ii-1).ne.' ')) then
              numlu = numlu + 1
-          end if	   
+          end if
        end do 
        if (len_trim(tlu).le.3) numlu = 0
        backspace(103)
@@ -589,9 +589,20 @@
       read (103,*,iostat=eof) ismax
       if (eof < 0) exit   
       read (103,*,iostat=eof) iroutunit
-      exit
+      if (eof < 0) exit
 !!    Drainmod input variables - 01/2006
-      end do
+!!    Paddy Rice (revised by ljzhu), 11/01/2017
+      read (103,*,iostat=eof) titldum
+      if (eof < 0) exit
+      read (103,*,iostat=eof) embnkfr_pr
+      if (eof < 0) exit
+      read (103,*,iostat=eof) pcp2canfr_pr
+      if (eof < 0) exit
+      read (103,*,iostat=eof) perco_max_paddy
+      if (eof < 0) exit
+!!    Paddy Rice (revised by ljzhu), 11/01/2017
+      exit
+      end do  ! end read basins.bsn file
 
 !!    copy global values to local HRUs
       esco = escobsn
@@ -670,7 +681,7 @@
       endif
       if(sed_ch>2) then
        write(*,*) 'Error in choosing channel erosion model:
-     &	0-Bagnold, 1-Brownlie, 2-Yang'
+     &    0-Bagnold, 1-Brownlie, 2-Yang'
        write(*,*) 'Check *.bsn file to correct the error'
     !  stop
       endif
@@ -715,8 +726,8 @@
       close (103)
       
       if (cswat == 1) then
-	 open (100,file="cswat_profile.txt",recl=280)
-	 write (100,*) 'year',';','day',';','hru',';','cmass',';','sol_rsd',
+        open (100,file="cswat_profile.txt",recl=280)
+        write (100,*) 'year',';','day',';','hru',';','cmass',';','sol_rsd',
      & ';','mancmass'
       end if
 
@@ -746,8 +757,8 @@
       !!add by zhang
       !!=====================
 
-!	open (111, file="final_n_balance.txt")
-!	open (112, file="final_yields.txt")
+!    open (111, file="final_n_balance.txt")
+!    open (112, file="final_yields.txt")
     !! carbon output ends 
      
       

@@ -168,7 +168,7 @@
       integer :: j, ly
       real :: potsep, sumo, potev, cnv, potpcp, no3in, qdayi
       real :: sedloss, no3loss, yy, dg, excess, stmax, sedsetl
-	real :: sanloss, silloss, claloss, sagloss, lagloss
+      real :: sanloss, silloss, claloss, sagloss, lagloss
       real :: potmm,minpsloss,minpaloss, solploss, orgnloss, orgploss
       real :: drcla, drsil, drtot, pot_depth, potflwosp, potmpao, potmpso
       real :: potno3o, potorgno, potorgpo, potsa_ini, potsolpo, potvol_ini
@@ -219,7 +219,6 @@
       no3in = surqno3(j)   !+ latno3(j) + gwno3(j) - don't include groundwater no3
       
 !!    conversion factors
-      cnv = 10. * hru_ha(j)
       rto = 1.
 
 !     when water is impounding
@@ -403,7 +402,7 @@
          endif  
          
 !        calculate seepage into soil
-         potsep = yy * potsa(j) * 240. / cnv                       !!mm/h*ha/240=m3/cnv=mm
+         potsep = yy * 24.
          potsep = Min(potsep, pot_vol(j))
          potvol_sep = pot_vol(j)
          pot_vol(j) = pot_vol(j) - potsep
@@ -459,7 +458,7 @@
 
           sedloss = pot_sed(j) * tileo / potvol_tile
           sedloss = Min(sedloss, pot_sed(j))            
-			  
+
           pot_sed(j) = pot_sed(j) - sedloss
           potsedo = potsedo + sedloss
           sedyld(j) = sedyld(j) + sedloss
@@ -467,7 +466,7 @@
           no3loss = Min(no3loss, pot_no3(j))
           pot_no3(j) = pot_no3(j) - no3loss
           surqno3(j) = surqno3(j) + no3loss / hru_ha(j)
-			  
+
           solploss = pot_solp(j) *  tileo / potvol_tile
           solploss = Min(solploss, pot_solp(j))
           solp_tileo = solploss
@@ -539,7 +538,7 @@
           no3loss = pot_no3(j) *  potsep / potvol_sep
           no3loss = Min(no3loss, pot_no3(j))
           pot_no3(j) = pot_no3(j) - no3loss
-			  
+
           solploss = pot_solp(j) *  potsep / potvol_sep
           solploss = Min(solploss, pot_solp(j))
           pot_solp(j) = pot_solp(j) - solploss

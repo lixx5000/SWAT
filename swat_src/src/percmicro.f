@@ -80,25 +80,24 @@
         return
       end if
 
-        !! COMPUTE LATERAL FLOW USING HILLSLOPE STORAGE METHOD
-        if (ly1 == 1) then
-          yy = 0.
-        else
-          yy = 0.
-          yy = sol_z(ly1-1,j)
-        end if
+      !! COMPUTE LATERAL FLOW USING HILLSLOPE STORAGE METHOD
+      if (ly1 == 1) then
+        yy = 0.
+      else
+        yy = 0.
+        yy = sol_z(ly1-1,j)
+      end if
 
-        dg = 0.
-        ho = 0.
-        latlyr = 0.
-        dg = sol_z(ly1,j) - yy
-        if (abs(sol_ul(ly1,j) - sol_fc(ly1,j)) < 1.e-5) then
-          ho=0.
-        else
-          ho = 2. * sw_excess / ((sol_ul(ly1,j) - sol_fc(ly1,j)) /  dg)
-        end if
-        latlyr = adjf * ho * sol_k(ly1,j) * hru_slp(j) / slsoil(j)      
-     &                                                            * .024
+      dg = 0.
+      ho = 0.
+      latlyr = 0.
+      dg = sol_z(ly1,j) - yy
+      if (abs(sol_ul(ly1,j) - sol_fc(ly1,j)) < 1.e-5) then
+        ho=0.
+      else
+        ho = 2. * sw_excess / ((sol_ul(ly1,j) - sol_fc(ly1,j)) /  dg)
+      end if
+      latlyr = adjf * ho * sol_k(ly1,j) * hru_slp(j) / slsoil(j) * .024
 
       if (latlyr < 0.) latlyr = 0. 
       if (latlyr > sw_excess) latlyr = sw_excess
@@ -130,10 +129,10 @@
       sepday = sw_excess * (1. - Exp(-24. / sol_hk(ly1,j)))
       
       !! limit maximum seepage from biozone layer below potential perc amount
-	if(ly1 == i_sep(j).and.isep_opt(j)==1) then
-	   sepday = min(sepday,sol_k_sep *24.)
-	   bz_perc(j) = sepday
-	end if
+      if(ly1 == i_sep(j).and.isep_opt(j)==1) then
+        sepday = min(sepday,sol_k_sep *24.)
+        bz_perc(j) = sepday
+      end if
       
       !! restrict seepage if next layer is saturated
       if (ly1 == sol_nly(j)) then
@@ -143,7 +142,9 @@
         else
           sepday = sepday * xx / (xx + Exp(8.833 - 2.598 * xx))
         end if
+
       end if
+
 
       !! check mass balance
       if (sepday + latlyr > sw_excess) then
@@ -158,6 +159,9 @@
         sepday = 0.
         sepday = sw_excess - lyrtile
       endif
+
+       !! for paddy rice, limit the seepage to groundwater less than 2mm/day, By Junzhi Liu, 2017-12-03
+      if (ly1 == sol_nly(j) .and. idplt(j) == 33) sepday = min(sepday, perco_max_paddy)
 
       return
       end

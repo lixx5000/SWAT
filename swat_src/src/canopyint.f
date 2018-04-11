@@ -11,7 +11,7 @@
 !!    canmx(:)    |mm H2O        |maximum canopy storage
 !!    canstor(:)  |mm H2O        |amount of water held in canopy storage
 !!    icr(:)      |none          |sequence number of crop grown within a year
-!!    idplt(:,:,:)|none          |land cover code from crop.dat
+!!    idplt(:)    |none          |land cover code from crop.dat
 !!    ievent      |none          |rainfall/runoff code
 !!                               |0 daily rainfall/curve number technique
 !!                               |1 sub-daily rainfall/Green&Ampt/hourly
@@ -20,6 +20,9 @@
 !!    ihru        |none          |HRU number
 !!    laiday(:)   |m**2/m**2     |leaf area index
 !!    nro(:)      |none          |sequence number of year in rotation
+!!    embnkfr_pr  |none          |embankment area ratio of paddy rice HRU
+!!    pcp2canfr_pr|none          |fraction of precipitation drains into canals
+!!                                directly from embankment of paddy rice
 !!    precipday   |mm H2O        |precipitation for the day in HRU
 !!    precipdt(:) |mm H2O        |precipitation in time step for HRU
 !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -28,6 +31,8 @@
 !!    name        |units         |definition
 !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 !!    canstor(:)  |mm H2O        |amount of water held in canopy storage
+!!    pcp2canal   |mm H2O        |amount of precipitation drains into
+!!                                canals from embankment of paddy rice
 !!    precipday   |mm H2O        |precipitation reaching soil surface
 !!    precipdt(:) |mm H2O        |precipitation reaching soil surface in
 !!                               |time step
@@ -51,6 +56,7 @@
 
       integer :: j, ii
       real :: xx, canmxl, canstori
+      real :: caninterc, pcp2canal
 
       j = 0
       j = ihru
@@ -94,15 +100,34 @@
         case (0)
           xx = 0.
           canmxl = 0.
+          pcp2canal = 0.
           xx = precipday
           canmxl = canmx(j) * laiday(j) / blai(idplt(j))
-          precipday = precipday - (canmxl - canstor(j))
-          if (precipday < 0.) then
+          !!! revised by ljzhu, 10/30/2017
+          caninterc = canmxl - canstor(j)
+          if (precipday < caninterc) then
             canstor(j) = canstor(j) + xx
+            caninterc = xx
             precipday = 0.
           else
             canstor(j) = canmxl
+            if (idplt(j) == 33) then  ! paddy rice HRU
+              ! water added into ditches from low embankment, should be added to somewhere else.
+              pcp2canal = precipday * pcp2canfr_pr * embnkfr_pr
+              precipday = precipday - caninterc - pcp2canal
+            else
+              precipday = precipday - caninterc
+            endif
           endif
+
+          !!! previous version
+!         precipday = precipday - (canmxl - canstor(j))
+!         if (precipday < 0.) then
+!           canstor(j) = canstor(j) + xx
+!           precipday = 0.
+!         else
+!           canstor(j) = canmxl
+!         endif
        end select
 
       return
