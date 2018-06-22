@@ -16,6 +16,7 @@
   ```shell
   cd <path to SWAT>
   mkdir build
+  cd build
   cmake ..
   make && make install
   ```
