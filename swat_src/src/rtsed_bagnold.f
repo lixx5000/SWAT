@@ -500,7 +500,7 @@
       
 !!    Bank erosion
       rchdy(55,jrch) = bnkrte
-!!    Channel Degredation
+!!    Channel Degradation
       rchdy(56,jrch) = degrte
 !!    Channel Deposition (Only new deposits during the current time step)
       if (depch(jrch) >= depprch(jrch)) then
