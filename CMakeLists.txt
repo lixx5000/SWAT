@@ -73,9 +73,9 @@ INCLUDE(SetParallelizationLibrary)
 ### Use statically or dynamically linkage?
 ### Global flag to cause add_library to create shared libraries if on, otherwise static library.
 OPTION(BUILD_SHARED_LIBS "Build shared libraries (DLLs)." OFF)
-### libraries built with hunter link against the dynamic CRT on windows
-OPTION(BUILD_WITH_STATIC_CRT "Build against dynamic CRT on windows." ON)
 IF(MSVC)
+    ### libraries built with hunter link against the dynamic CRT on windows
+    OPTION(BUILD_WITH_STATIC_CRT "Build against dynamic CRT on windows." ON)
     INCLUDE(CRTLinkage)
 ELSE()
     OPTION(ENABLE_STATIC_LINKING "Enable static libraries linking" ON)
