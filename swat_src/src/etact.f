@@ -113,6 +113,7 @@
       real :: esd, etco, effnup
       real :: no3up, es_max, eos1, xx, cej, eaj, pet, esleft
       real :: sumsnoeb, evzp, eosl, dep, evz, sev
+      real :: etrd, etae
 ! explicitly define return type of external functions. Added by lj for gfortran.
       real, external :: Expo
       j = 0
@@ -186,6 +187,33 @@
         esleft = 0.
         esleft = es_max
 
+         ! for paddy rice, recalculate es_max and ep_max, by Junzhi Liu, 2017-11
+        if (idplt(j) == 33) then
+             ! split the total pet to the radiation-driven part and drying power part
+             etrd = 0.
+             etae = 0.
+             etrd = 0.75 * pet
+             etae = pet - etrd
+
+             es_max = exp(-0.5 * laiday(j)) * pet
+             ep_max = etrd * (1. - exp(-0.5 * laiday(j) )) + etae * min(2., laiday(j) );
+
+             esleft = es_max
+
+             ! for impound paddy rice, source for evaporation is taken from water layer first
+             if (pot_vol(j) >= esleft) then
+                 !take all soil evap from pot
+                 pot_vol(j) = pot_vol(j) - esleft
+                 pot_evap(j) = esleft
+                 esleft = 0.0
+             else
+                 !first taking from pot then start taking from soil
+                 esleft = esleft - pot_vol(j)
+                 pot_evap(j) = pot_vol(j)
+                 pot_vol(j) = 0.0
+             end if
+        end if
+
         !! compute sublimation
         if (elevb_fr(1,hru_sub(j)) <= 0.) then
           !! compute sublimation without elevation bands
@@ -244,7 +272,6 @@
       eosl = 0.
       eosl = esleft
       do ly = 1, sol_nly(j)
-
         !! depth exceeds max depth for soil evap (esd)
         dep = 0.
         if (ly == 1) then

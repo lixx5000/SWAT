@@ -146,6 +146,7 @@
       j = 0
       j = ihru
 
+      qdr(j) = 0.0
 
       !!by zhang DSSAT tillage
       !!======================
@@ -217,8 +218,14 @@
          
         !! perform management operations
         if (yr_skip(j) == 0) call operatn
-          
-        if (auto_wstr(j) > 1.e-6 .and. irrsc(j) > 2) call autoirr       
+
+        !!  recalculate surfq for paddy rice according the water depth configuration, By Junzhi Liu 2017-12-03
+        if (idplt(j) == 33 .and. imp_trig(j) == 0) then
+            call surq_rice
+        ! for impound paddy rice, auto irragation is performed in surq_rice instead of in autoirr
+        else if (auto_wstr(j) > 1.e-6 .and. irrsc(j) > 2) then
+            call autoirr
+        end if
         
         !! perform soil water routing
         call percmain
@@ -412,7 +419,7 @@
 
 
         !! compute water yield for HRU
-        qdr(j) = qday + latq(j) + gw_q(j) + qtile + gw_qdeep(j)
+        qdr(j) = qdr(j) + qday + latq(j) + gw_q(j) + qtile + gw_qdeep(j)
         if (qdr(j) < 0.) qdr(j) = 0.
         if (qdr(j) > 0.) then
           qdfr = qday / qdr(j)
