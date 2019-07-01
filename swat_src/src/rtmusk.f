@@ -53,7 +53,7 @@
 !!                               |0.1 bankfull depth (low flow) (ratio
 !!                               |of storage to discharge)
 !!    rnum1       |none          |fraction of overland flow
-!!    rchstor(:)   |m^3 H2O       |water stored in reach
+!!    rchstor(:)  |m^3 H2O       |water stored in reach
 !!    varoute(2,:)|m^3 H2O       |water flowing into reach on day
 !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
@@ -69,7 +69,7 @@
 !!    rttlc       |m^3 H2O       |transmission losses from reach on day
 !!    rtwtr       |m^3 H2O       |water leaving reach on day
 !!    sdti        |m^3/s         |average flow on day in reach
-!!    rchstor(:)   |m^3 H2O       |water stored in reach
+!!    rchstor(:)  |m^3 H2O       |water stored in reach
 !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 !!    ~ ~ ~ LOCAL DEFINITIONS ~ ~ ~
@@ -183,7 +183,7 @@
       rh = 0.
       vc = 0.
 
-!! If average flowrate is greater than than the channel capacity at bank full
+!! If average flowrate is greater than the channel capacity at bank full
 !! then simulate flood plain flow else simulate the regular channel flow
       if (volrt > maxrt) then
       rcharea = phi(1,jrch)
@@ -302,7 +302,8 @@
         !! calculate evaporation
       rtevp = 0.
        if (rtwtr > 0.) then
-
+          !! I think aaa should be divided by nn. By lj. 08/11/18
+          !! i.e., aaa = evrch * pet_day / 1000. / nn
           aaa = evrch * pet_day / 1000.
 
           if (rchdep <= ch_d(jrch)) then

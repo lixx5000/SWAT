@@ -21,7 +21,7 @@
 !!    chside(:)     |            |change in horizontal distance per unit
 !!                               |  vertical distance (0.0 - 5)
 !!                               |0 = for vertical channel bank
-!!                               |5 = for channel bank with gentl side slope
+!!                               |5 = for channel bank with gentle side slope
 !!    ch_bnk_bd(:)  |(g/cc)      |bulk density of channel bank sediment (1.1-1.9)
 !!    ch_bed_bd(:)  |(g/cc)      |bulk density of channel bed sediment (1.1-1.9)
 !!    ch_bnk_kd(:)  |            |erodibility of channel bank sediment by jet test
@@ -61,7 +61,7 @@
 !!    ch_si(:)      |m/m         |initial slope of main channel
 !!    ch_w(2,:)     |m           |average width of main channel
 !!    ch_wdr(:)     |m/m         |channel width to depth ratio
-!!    prf(:)      |none          |Reach peak rate adjustment factor for sediment 
+!!    prf(:)        |none        |Reach peak rate adjustment factor for sediment 
 !!                               |routing in the channel. Allows impact of 
 !!                               |peak flow rate on sediment routing and 
 !!                               |channel reshaping to be taken into account.
@@ -170,7 +170,7 @@
       end if
 
 
-!!    Bank material is assumed to be silt type partcile if not given.
+!!    Bank material is assumed to be silt type particle if not given.
       if (ch_bnk_d50(irch) <= 1.e-6) ch_bnk_d50(irch) = 50. !! Units are in Micrometer
       if (ch_bnk_d50(irch) > 10000) ch_bnk_d50(irch) = 10000.
 
@@ -209,7 +209,7 @@
         ch_bnk_cla(irch) = 0.05
       end if
 
-!!    Bed material is assumed to be sand type partcile if not given.
+!!    Bed material is assumed to be sand type particle if not given.
       if (ch_bed_d50(irch) <= 1.e-6) ch_bed_d50(irch) = 500 !! Units are in Micrometer
       if (ch_bed_d50(irch) > 10000) ch_bed_d50(irch) = 10000. 
 

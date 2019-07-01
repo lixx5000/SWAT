@@ -112,7 +112,7 @@ subroutine carbon_zhang2
     real :: PN1, PN2, PN3, PN4, PN5, PN6, PN7, PN8, PN9
     real :: SUM, CPN1, CPN2, CPN3, CPN4, CPN5
     real :: WMIN, DMDN, wdn, Delta_BMC, DeltaWN
-    real :: decr, deltaBNC, hmn, hmp_rate, LSLNCAT, RLR, rmnl, rmp, RTO, rwn, SNTA, XBN
+    real :: decr, deltaBNC, hmn, hmp_rate, RLR, rmnl, rmp, RTO, rwn, SNTA, XBN
     real :: DeltaBMC, hmp, rmn1, XBM
     !! external function, added by lj.
     real, external :: fcgd
@@ -506,7 +506,7 @@ subroutine carbon_zhang2
                 LSCTA = LSCTP
                 LSNTA = LSNTP
                 LSLCTA = LSLCTP
-                LSLNCAT = LSLNCTP
+                LSLNCTA = LSLNCTP ! zhulj, 06/22/18
             END IF
             IF(CPN2 > 0.)THEN
                 LMCTA = LMCTP * X3
